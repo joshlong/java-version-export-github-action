@@ -1,0 +1,6 @@
+name: 'bp-mode-github-action'
+description: 'Sets the BP_MODE for a given workflow and hydrates the environment based on the detected value for BP_MODE'
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

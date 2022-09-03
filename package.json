@@ -1,0 +1,25 @@
+{
+  "name": "bootiful-podcast-action",
+  "version": "1.0.0",
+  "description": "A github action to handle the things I need done consistently in every project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bootiful-podcast/bootiful-podcast-action.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bootiful-podcast/bootiful-podcast-action/issues"
+  },
+  "homepage": "https://github.com/bootiful-podcast/bootiful-podcast-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0",
+    "tmp": "^0.2.1"
+  }
+}
