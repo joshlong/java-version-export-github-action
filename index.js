@@ -9,9 +9,6 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 const exec = require("@actions/exec");
 try {
-  const toEval =
-    "mvn help:evaluate -Dexpression=java.version -q -DforceStdout ";
-  console.log(toEval);
   const result = exec.exec(
     "mvn",
     ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
