@@ -1,22 +1,22 @@
 {
-  "name": "bootiful-podcast-action",
+  "name": "maven-property-evaluator",
   "version": "1.0.0",
-  "description": "A github action to handle the things I need done consistently in every project",
+  "description": "A github action to evaluate and export the version of the project as gleemed from reading the root Maven pom.xml file",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bootiful-podcast/bootiful-podcast-action.git"
+    "url": "git+https://github.com/joshlong/maven-property-evaluator.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bootiful-podcast/bootiful-podcast-action/issues"
+    "url": "https://github.com/joshlong/maven-property-evaluator/issues"
   },
-  "homepage": "https://github.com/bootiful-podcast/bootiful-podcast-action#readme",
+  "homepage": "https://github.com/joshlong/maven-property-evaluator#readme",
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/exec": "^1.1.1",
