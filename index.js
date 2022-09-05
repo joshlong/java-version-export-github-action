@@ -30,7 +30,13 @@ function cmd(cmd, args, stdoutListener) {
 try {
   cmd(
     "mvn",
-    ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
+    [
+      "help:evaluate",
+      "-q",
+      "-DforceStdout",
+      "-Dexpression=maven.compiler.target",
+    ],
+    // ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
     (outputBuffer) => {
       const output = outputBuffer.toString();
       console.log(output);
