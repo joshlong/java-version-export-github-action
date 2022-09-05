@@ -11491,7 +11491,7 @@ function cmd(cmd, args, stdoutListener) {
       },
     })
     .then((ec) => {
-      console.log("the result is " + ec);
+      console.debug("the exit code is " + ec);
     });
 }
 
