@@ -1,5 +1,8 @@
 /**
- * Uses Bruno Borges' brilliant hack to extract a property from a Maven `pom.xml` and export it to an environment variable
+ *
+ * Uses <a href="http://twitter.com/brunoborges">Bruno Borges'</a> brilliant
+ * <a href="https://twitter.com/brunoborges/status/1565783443216416768?s=21&t=EoHl3kqopkK5pry-VVsSZA">hack</a> to extract a property
+ * from a Maven `pom.xml` and export it to an environment variable
  * or property that other things, like the `setup-java` Github Action, can use.
  *
  * @author Josh Long
