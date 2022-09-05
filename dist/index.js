@@ -11488,7 +11488,7 @@ try {
         stdout: function (output) {
           const varsMap = new Map();
           varsMap.set("java_version", output + "");
-          varsMap.set("java_major_version", parseInt(output) + "");
+          varsMap.set("java_major_version", parseInt("" + output) + "");
           varsMap.forEach(function (value, key) {
             console.log(key + "=" + value);
             core.setOutput(key, value);
