@@ -1,5 +1,5 @@
-name: "bp-mode-github-action"
-description: "Sets the BP_MODE for a given workflow and hydrates the environment based on the detected value for BP_MODE"
+name: "java-version-export-github-action"
+description: "Exports the version of Java specified in pom.xml for use in configuring the version of Java to be used in the github action job"
 
 runs:
   using: "node16"
