@@ -3,8 +3,8 @@
 npm i -g @vercel/ncc
 ncc build index.js --license licenses.txt
 
-# VERSION=$((`cat VERSION`+1))
-VERSION=1
+VERSION=$((`cat VERSION`+1))
+# VERSION=1
 echo $VERSION > VERSION
 echo $VERSION
 
