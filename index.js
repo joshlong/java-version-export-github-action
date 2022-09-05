@@ -8,31 +8,50 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
 const exec = require("@actions/exec");
-try {
-  const result = exec.exec(
-    "mvn",
-    ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
-    {
-      listeners: {
-        stdout: function (outputBuffer) {
-          const output = outputBuffer.toString();
-          console.log(output);
 
-          const varsMap = new Map();
-          varsMap.set("java_version", output + "");
-          varsMap.set("java_major_version", parseInt("" + output) + "");
-          varsMap.forEach(function (value, key) {
-            console.log(key + "=" + value);
-            core.setOutput(key, value);
-            core.exportVariable(key.toUpperCase(), value);
-          });
+function cmd(cmd, args, stdoutListener) {
+  exec
+    .exec(
+      "mvn",
+      ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
+      {
+        listeners: {
+          stdout: function (outputBuffer) {
+            stdoutListener(outputBuffer);
+          },
         },
-      },
+      }
+    )
+    .then(function (exitCode) {
+      console.log("the result is " + exitCode);
+    });
+}
+
+try {
+  cmd(
+    "mvn",
+    ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=person.name"],
+    function (output) {
+      console.log("name: " + output);
     }
   );
-  result.then(function (exitCode) {
-    console.log("the result is " + exitCode);
-  });
+  cmd(
+    "mvn",
+    ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
+    function (outputBuffer) {
+      const output = outputBuffer.toString();
+      console.log(output);
+
+      const varsMap = new Map();
+      varsMap.set("java_version", output + "");
+      varsMap.set("java_major_version", parseInt("" + output) + "");
+      varsMap.forEach(function (value, key) {
+        console.log(key + "=" + value);
+        core.setOutput(key, value);
+        core.exportVariable(key.toUpperCase(), value);
+      });
+    }
+  );
 } catch (error) {
   core.setFailed(error.message);
 }
