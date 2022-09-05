@@ -11,47 +11,35 @@ const exec = require("@actions/exec");
 
 function cmd(cmd, args, stdoutListener) {
   exec
-    .exec(
-      "mvn",
-      ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
-      {
-        listeners: {
-          stdout: function (outputBuffer) {
-            stdoutListener(outputBuffer);
-          },
-        },
-      }
-    )
-    .then(function (exitCode) {
-      console.log("the result is " + exitCode);
+    .exec(cmd, args, {
+      listeners: {
+        stdout: stdoutListener,
+      },
+    })
+    .then((ec) => {
+      console.log("the result is " + ec);
     });
 }
 
 try {
-  cmd(
-    "mvn",
-    ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=person.name"],
-    function (output) {
-      console.log("name: " + output);
-    }
-  );
-  cmd(
-    "mvn",
-    ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
-    function (outputBuffer) {
-      const output = outputBuffer.toString();
-      console.log(output);
+  args = ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=person.name"];
 
-      const varsMap = new Map();
-      varsMap.set("java_version", output + "");
-      varsMap.set("java_major_version", parseInt("" + output) + "");
-      varsMap.forEach(function (value, key) {
-        console.log(key + "=" + value);
-        core.setOutput(key, value);
-        core.exportVariable(key.toUpperCase(), value);
-      });
-    }
-  );
+  cmd("mvn", args, (output) => {
+    console.log("name: " + output);
+  });
+  cmd("mvn", args, (outputBuffer) => {
+    const output = outputBuffer.toString();
+    console.log(output);
+
+    const varsMap = new Map();
+    varsMap.set("java_version", output + "");
+    varsMap.set("java_major_version", parseInt("" + output) + "");
+    varsMap.forEach(function (value, key) {
+      console.log(key + "=" + value);
+      core.setOutput(key, value);
+      core.exportVariable(key.toUpperCase(), value);
+    });
+  });
 } catch (error) {
   core.setFailed(error.message);
 }
