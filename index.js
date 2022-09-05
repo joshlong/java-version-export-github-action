@@ -9,6 +9,12 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 const exec = require("@actions/exec");
 
+/**
+ * makes it a little more clean to exec something. make sure to redirect all other file descripters to stdout!
+ * @param {*} cmd
+ * @param {*} args
+ * @param {*} stdoutListener
+ */
 function cmd(cmd, args, stdoutListener) {
   exec
     .exec(cmd, args, {
@@ -22,24 +28,22 @@ function cmd(cmd, args, stdoutListener) {
 }
 
 try {
-  args = ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=person.name"];
-
-  cmd("mvn", args, (output) => {
-    console.log("name: " + output);
-  });
-  cmd("mvn", args, (outputBuffer) => {
-    const output = outputBuffer.toString();
-    console.log(output);
-
-    const varsMap = new Map();
-    varsMap.set("java_version", output + "");
-    varsMap.set("java_major_version", parseInt("" + output) + "");
-    varsMap.forEach(function (value, key) {
-      console.log(key + "=" + value);
-      core.setOutput(key, value);
-      core.exportVariable(key.toUpperCase(), value);
-    });
-  });
+  cmd(
+    "mvn",
+    ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
+    (outputBuffer) => {
+      const output = outputBuffer.toString();
+      console.log(output);
+      const varsMap = new Map();
+      varsMap.set("java_version", output + "");
+      varsMap.set("java_major_version", parseInt("" + output) + "");
+      varsMap.forEach(function (value, key) {
+        console.log(key + "=" + value);
+        core.setOutput(key, value);
+        core.exportVariable(key.toUpperCase(), value);
+      });
+    }
+  );
 } catch (error) {
   core.setFailed(error.message);
 }
