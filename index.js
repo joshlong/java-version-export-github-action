@@ -7,7 +7,7 @@
 // https://github.com/actions/toolkit
 const core = require("@actions/core");
 const github = require("@actions/github");
-const github = require("@actions/github");
+const exec = require("@actions/exec");
 
 // todo analyze the incoming event payload and then set BP_MODE to be something useful
 try {
