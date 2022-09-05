@@ -1,3 +1,3 @@
-# Maven Property Evaluator
+# Java Version Exporter
 
-Evaluates a Maven property and exports it for use in later steps in the pipeline.
+Evaluates a Maven property to export the version of Java
