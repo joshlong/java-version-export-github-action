@@ -11485,7 +11485,10 @@ try {
     ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
     {
       listeners: {
-        stdout: function (output) {
+        stdout: function (outputBuffer) {
+          const output = outputBuffer.toString();
+          console.log(output);
+
           const varsMap = new Map();
           varsMap.set("java_version", output + "");
           varsMap.set("java_major_version", parseInt("" + output) + "");
