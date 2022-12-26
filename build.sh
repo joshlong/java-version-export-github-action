@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-npm i -g @vercel/ncc
+npm --global install  "@vercel/ncc"  
 ncc build index.js --license licenses.txt
 
 VERSION=$((`cat VERSION`+1))
