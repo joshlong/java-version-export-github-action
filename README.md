@@ -1,3 +1,5 @@
+# A Github Action to Export Your Maven and Java Project's Version for Use in Subsequent Steps 
+
 I saw a great tweet from [Bruno Borges](https://twitter.com/brunoborges) about using Github Actions to derive the version of Java to be installed by analyzing the `pom.xml` of the build itself. It seems like a good enough idea, 
 so I [put it into practive here](https://github.com/joshlong/java-version-export-github-action). Most of the magic lives [in a very tiny JavaScript file, `index.js`](https://raw.githubusercontent.com/joshlong/java-version-export-github-action/main/index.js):
 
