@@ -20,59 +20,58 @@ const fs = require('fs');
  * @param {*} stdoutListener
  */
 function cmd(cmd, args, stdoutListener) {
-  exec
-    .exec(cmd, args, {
-      listeners: {
-        stdout: stdoutListener,
-      },
-    })
-    .then((ec) => {
-      console.debug("the exit code is " + ec);
-    });
+    exec
+        .exec(cmd, args, {
+            listeners: {
+                stdout: stdoutListener,
+            },
+        })
+        .then((ec) => {
+            console.debug("the exit code is " + ec);
+        });
 }
 
-  try { 
-    if ( fs.existsSync ('pom.xml')){ // maven build 
-                cmd(
-                  "mvn",
-                  [
-                    "help:evaluate",
-                    "-q",
-                    "-DforceStdout",
-                    "-Dexpression=maven.compiler.target",
-                  ],
-                  // ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
-                  (outputBuffer) => {
-                    const output = outputBuffer.toString();
-                    console.log(output);
-                    const varsMap = new Map();
-                    varsMap.set("java_version", output + "");
-                    varsMap.set("java_major_version", parseInt("" + output) + "");
-                    varsMap.forEach(function (value, key) {
-                      console.log(key + "=" + value);
-                      core.setOutput(key, value);
-                      core.exportVariable(key.toUpperCase(), value);
-                    });
-                  }
-                ); 
+try {
+
+    console.log(fs.existsSync('pom.xml'))
+    console.log(fs.existsSync('build.gradle'))
+    console.log(fs.existsSync('build.gradle.kts'))
+
+    if (fs.existsSync('pom.xml')) { // maven build
+        cmd(
+            "mvn",
+            [
+                "help:evaluate",
+                "-q",
+                "-DforceStdout",
+                "-Dexpression=maven.compiler.target",
+            ],
+            // ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
+            (outputBuffer) => {
+                const output = outputBuffer.toString();
+                console.log(output);
+                const varsMap = new Map();
+                varsMap.set("java_version", output + "");
+                varsMap.set("java_major_version", parseInt("" + output) + "");
+                varsMap.forEach(function (value, key) {
+                    console.log(key + "=" + value);
+                    core.setOutput(key, value);
+                    core.exportVariable(key.toUpperCase(), value);
+                });
+            }
+        );
     }  //
     else {
-      if ( fs.existsSync ('build.gradle') || fs.existsSync ('build.gradle.kts') ){  
-
-            cmd ("./gradlew" ,['-q' ,':properties' '--property sourceCompatibility'] , 
-              ( outputBuffer ) =>{
-                  const buff= outputBuffer.toString();
-                  const lines=buff.split ('\n') 
-                  const lastLine = lines [lines.length -1 ] ;
-                  console.log ('the last line is ' + lastLine);
-
-              })
-
-      }
-      }
-
-  } 
-  catch (error) {
+        if (fs.existsSync('build.gradle') || fs.existsSync('build.gradle.kts')) {
+            cmd("./gradlew", ['-q', ':properties' , '--property sourceCompatibility'], outputBuffer => {
+                const buff = outputBuffer.toString();
+                const lines = buff.split('\n')
+                const lastLine = lines [lines.length - 1];
+                console.log('the last line is ' + lastLine);
+            });
+        }
+    }
+} catch (error) {
     core.setFailed(error.message);
-  }  
+}  
 

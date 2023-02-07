@@ -10988,6 +10988,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(4181);
 const github = __nccwpck_require__(2726);
 const exec = __nccwpck_require__(9231);
+const fs = __nccwpck_require__(7147);
 
 /**
  * makes it a little more clean to exec something. make sure to redirect all other file descripters to stdout!
@@ -10996,44 +10997,61 @@ const exec = __nccwpck_require__(9231);
  * @param {*} stdoutListener
  */
 function cmd(cmd, args, stdoutListener) {
-  exec
-    .exec(cmd, args, {
-      listeners: {
-        stdout: stdoutListener,
-      },
-    })
-    .then((ec) => {
-      console.debug("the exit code is " + ec);
-    });
+    exec
+        .exec(cmd, args, {
+            listeners: {
+                stdout: stdoutListener,
+            },
+        })
+        .then((ec) => {
+            console.debug("the exit code is " + ec);
+        });
 }
 
 try {
-  cmd(
-    "mvn",
-    [
-      "help:evaluate",
-      "-q",
-      "-DforceStdout",
-      "-Dexpression=maven.compiler.target",
-    ],
-    // ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
-    (outputBuffer) => {
-      const output = outputBuffer.toString();
-      console.log(output);
-      const varsMap = new Map();
-      varsMap.set("java_version", output + "");
-      varsMap.set("java_major_version", parseInt("" + output) + "");
-      varsMap.forEach(function (value, key) {
-        console.log(key + "=" + value);
-        core.setOutput(key, value);
-        core.exportVariable(key.toUpperCase(), value);
-      });
+
+    console.log(fs.existsSync('pom.xml'))
+    console.log(fs.existsSync('build.gradle'))
+    console.log(fs.existsSync('build.gradle.kts'))
+
+    if (fs.existsSync('pom.xml')) { // maven build
+        cmd(
+            "mvn",
+            [
+                "help:evaluate",
+                "-q",
+                "-DforceStdout",
+                "-Dexpression=maven.compiler.target",
+            ],
+            // ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
+            (outputBuffer) => {
+                const output = outputBuffer.toString();
+                console.log(output);
+                const varsMap = new Map();
+                varsMap.set("java_version", output + "");
+                varsMap.set("java_major_version", parseInt("" + output) + "");
+                varsMap.forEach(function (value, key) {
+                    console.log(key + "=" + value);
+                    core.setOutput(key, value);
+                    core.exportVariable(key.toUpperCase(), value);
+                });
+            }
+        );
+    }  //
+    else {
+        if (fs.existsSync('build.gradle') || fs.existsSync('build.gradle.kts')) {
+            cmd("./gradlew", ['-q', ':properties' , '--property sourceCompatibility'], outputBuffer => {
+                const buff = outputBuffer.toString();
+                const lines = buff.split('\n')
+                const lastLine = lines [lines.length - 1];
+                console.log('the last line is ' + lastLine);
+            });
+        }
     }
-  );
-} 
-catch (error) {
-  core.setFailed(error.message);
-}
+} catch (error) {
+    core.setFailed(error.message);
+}  
+
 
 })();
 
