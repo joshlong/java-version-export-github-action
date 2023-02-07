@@ -11044,14 +11044,16 @@ try {
     }  //
     else {
         if (gradleGroovy || gradleKotlin) {
-            cmd("./gradlew", [  ':properties'/*, '--property' , 'sourceCompatibility'*/], outputBuffer => {
+            cmd("./gradlew", [ ':properties','--property','sourceCompatibility' ], outputBuffer => {
                 const buff = outputBuffer.toString();
-
-                const lines = buff.split('\n')
-                console.log('there are ' + lines.length + ' lines.')
-                console.log('buff: ' + buff)
-                const lastLine = lines [lines.length - 1];
-                console.log('the last line is ' + lastLine);
+                if (buff.indexOf ('sourceCompatibility')!=-1) {
+                  console.log ('sourceCompatibility: ' + buff)
+                }
+                else {
+                   console.log ('nope!')
+                }
+                
+                
             });
         }
     }
