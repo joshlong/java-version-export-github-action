@@ -11,6 +11,7 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
 const exec = require("@actions/exec");
+const fs = require('fs');
 
 /**
  * makes it a little more clean to exec something. make sure to redirect all other file descripters to stdout!
@@ -30,30 +31,48 @@ function cmd(cmd, args, stdoutListener) {
     });
 }
 
-try {
-  cmd(
-    "mvn",
-    [
-      "help:evaluate",
-      "-q",
-      "-DforceStdout",
-      "-Dexpression=maven.compiler.target",
-    ],
-    // ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
-    (outputBuffer) => {
-      const output = outputBuffer.toString();
-      console.log(output);
-      const varsMap = new Map();
-      varsMap.set("java_version", output + "");
-      varsMap.set("java_major_version", parseInt("" + output) + "");
-      varsMap.forEach(function (value, key) {
-        console.log(key + "=" + value);
-        core.setOutput(key, value);
-        core.exportVariable(key.toUpperCase(), value);
-      });
-    }
-  );
-} 
-catch (error) {
-  core.setFailed(error.message);
-}
+  try { 
+    if ( fs.existsSync ('pom.xml')){ // maven build 
+                cmd(
+                  "mvn",
+                  [
+                    "help:evaluate",
+                    "-q",
+                    "-DforceStdout",
+                    "-Dexpression=maven.compiler.target",
+                  ],
+                  // ["help:evaluate", "-q", "-DforceStdout", "-Dexpression=java.version"],
+                  (outputBuffer) => {
+                    const output = outputBuffer.toString();
+                    console.log(output);
+                    const varsMap = new Map();
+                    varsMap.set("java_version", output + "");
+                    varsMap.set("java_major_version", parseInt("" + output) + "");
+                    varsMap.forEach(function (value, key) {
+                      console.log(key + "=" + value);
+                      core.setOutput(key, value);
+                      core.exportVariable(key.toUpperCase(), value);
+                    });
+                  }
+                ); 
+    }  //
+    else {
+      if ( fs.existsSync ('build.gradle') || fs.existsSync ('build.gradle.kts') ){  
+
+            cmd ("./gradlew" ,['-q' ,':properties' '--property sourceCompatibility'] , 
+              ( outputBuffer ) =>{
+                  const buff= outputBuffer.toString();
+                  const lines=buff.split ('\n') 
+                  const lastLine = lines [lines.length -1 ] ;
+                  console.log ('the last line is ' + lastLine);
+
+              })
+
+      }
+      }
+
+  } 
+  catch (error) {
+    core.setFailed(error.message);
+  }  
+
