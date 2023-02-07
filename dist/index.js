@@ -11010,11 +11010,15 @@ function cmd(cmd, args, stdoutListener) {
 
 try {
 
-    console.log(fs.existsSync('pom.xml'))
-    console.log(fs.existsSync('build.gradle'))
-    console.log(fs.existsSync('build.gradle.kts'))
+    const maven = fs.existsSync('pom.xml')
+    const gradleGroovy = fs.existsSync('build.gradle')
+    const gradleKotlin = fs.existsSync('build.gradle.kts')
 
-    if (fs.existsSync('pom.xml')) { // maven build
+    console.log(maven)
+    console.log(gradleGroovy)
+    console.log(gradleKotlin)
+
+    if (maven) { // maven build
         cmd(
             "mvn",
             [
@@ -11039,10 +11043,12 @@ try {
         );
     }  //
     else {
-        if (fs.existsSync('build.gradle') || fs.existsSync('build.gradle.kts')) {
-            cmd("./gradlew", ['-q', ':properties' , '--property sourceCompatibility'], outputBuffer => {
+        if (gradleGroovy || gradleKotlin) {
+            cmd("./gradlew", ['-q', ':properties', '--property sourceCompatibility'], outputBuffer => {
                 const buff = outputBuffer.toString();
                 const lines = buff.split('\n')
+                console.log('there are ' + lines.length + ' lines.')
+                console.log('buff: ' + buff)
                 const lastLine = lines [lines.length - 1];
                 console.log('the last line is ' + lastLine);
             });
