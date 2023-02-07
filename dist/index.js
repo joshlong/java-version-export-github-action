@@ -11044,7 +11044,7 @@ try {
     }  //
     else {
         if (gradleGroovy || gradleKotlin) {
-            cmd("./gradlew", ['-q', ':properties', '--property' , 'sourceCompatibility'], outputBuffer => {
+            cmd("./gradlew", [  ':properties'/*, '--property' , 'sourceCompatibility'*/], outputBuffer => {
                 const buff = outputBuffer.toString();
 
                 const lines = buff.split('\n')
