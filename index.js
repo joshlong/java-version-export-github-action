@@ -67,8 +67,9 @@ try {
     }  //
     else {
         if (gradleGroovy || gradleKotlin) {
-            cmd("./gradlew", ['-q', ':properties', '--property sourceCompatibility'], outputBuffer => {
+            cmd("./gradlew", ['-q', ':properties', '--property' , 'sourceCompatibility'], outputBuffer => {
                 const buff = outputBuffer.toString();
+
                 const lines = buff.split('\n')
                 console.log('there are ' + lines.length + ' lines.')
                 console.log('buff: ' + buff)
